@@ -1,0 +1,7 @@
+target/
+.git/
+.gitignore
+node_modules/
+
+tdlib-db/
+tdlight-session/
