@@ -56,14 +56,14 @@ public class ProductBot extends TelegramLongPollingBot {
         if (text.equals("/start")) {
             session.setState(UserState.IDLE);
             session.setProductName(null);
-            sendMessage(chatId, "Привет\nНапиши /add чтобы добавить куклу");
+            sendMessage(chatId, "Hello!\nPrint /add to add a product");
             return;
         }
 
         if (text.equals("/add")) {
             session.setState(UserState.WAITING_PRODUCT_NAME);
             session.setProductName(null);
-            sendMessage(chatId, "Введите название куклы");
+            sendMessage(chatId, "Enter product name");
             return;
         }
 
@@ -71,7 +71,7 @@ public class ProductBot extends TelegramLongPollingBot {
             case WAITING_PRODUCT_NAME -> {
                 session.setProductName(text);
                 session.setState(UserState.WAITING_PRODUCT_PRICE);
-                sendMessage(chatId, "Теперь введите максимальную цену куклы");
+                sendMessage(chatId, "Now enter product max price");
             }
 
             case WAITING_PRODUCT_PRICE -> {
@@ -79,10 +79,10 @@ public class ProductBot extends TelegramLongPollingBot {
                     session.setMaxPrice(BigDecimal.valueOf(Double.parseDouble(text)));
 
                     session.setState(UserState.WAITING_PRODUCT_PRICE);
-                    sendMessage(chatId, "Теперь введите свою валюту (KZT, RUB, USD, EUR)");
+                    sendMessage(chatId, "Now enter your currency (KZT, RUB, USD, EUR)");
 
                 } catch (NumberFormatException e) {
-                    sendMessage(chatId, "Цена должна быть числом. Например: 1500");
+                    sendMessage(chatId, "The price must be a number, example: 1500");
                 }
             }
             case WAITING_PRODUCT_CURRENCY -> {
@@ -100,20 +100,20 @@ public class ProductBot extends TelegramLongPollingBot {
                     );
                     producer.send(searchQueryDto);
                     sendMessage(chatId,
-                            "Кукла сохранена\n" +
-                                    "Название: " + productName + "\n" +
-                                    "Цена: " + maxPrice + currency);
+                            "Product is save\n" +
+                                    "Name: " + productName + "\n" +
+                                    "Price: " + maxPrice + currency);
 
                     session.setState(UserState.IDLE);
                     session.setProductName(null);
 
                 } catch (NumberFormatException e) {
-                    sendMessage(chatId, "Цена должна быть числом. Например: 1500");
+                    sendMessage(chatId, "Currency must be one of 'KZT', 'RUB', 'USD', 'EUR'");
                 }
             }
 
 
-            default -> sendMessage(chatId, "Напиши /add чтобы добавить куклу");
+            default -> sendMessage(chatId, "Print /add to add a product");
         }
     }
 
