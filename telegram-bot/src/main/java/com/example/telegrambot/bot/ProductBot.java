@@ -78,7 +78,7 @@ public class ProductBot extends TelegramLongPollingBot {
                 try {
                     session.setMaxPrice(BigDecimal.valueOf(Double.parseDouble(text)));
 
-                    session.setState(UserState.WAITING_PRODUCT_PRICE);
+                    session.setState(UserState.WAITING_PRODUCT_CURRENCY);
                     sendMessage(chatId, "Now enter your currency (KZT, RUB, USD, EUR)");
 
                 } catch (NumberFormatException e) {
@@ -86,30 +86,25 @@ public class ProductBot extends TelegramLongPollingBot {
                 }
             }
             case WAITING_PRODUCT_CURRENCY -> {
-                try {
-                    String currency = text;
-                    String productName = session.getProductName();
-                    BigDecimal maxPrice = session.getMaxPrice();
+                String currency = text;
+                String productName = session.getProductName();
+                BigDecimal maxPrice = session.getMaxPrice();
 
-                    SearchQueryDto  searchQueryDto = new SearchQueryDto(
-                            chatId,
-                            userId,
-                            productName,
-                            maxPrice,
-                            currency
-                    );
-                    producer.send(searchQueryDto);
-                    sendMessage(chatId,
-                            "Product is save\n" +
-                                    "Name: " + productName + "\n" +
-                                    "Price: " + maxPrice + currency);
+                SearchQueryDto  searchQueryDto = new SearchQueryDto(
+                        chatId,
+                        userId,
+                        productName,
+                        maxPrice,
+                        currency
+                );
+                producer.send(searchQueryDto);
+                sendMessage(chatId,
+                        "Product is save\n" +
+                                "Name: " + productName + "\n" +
+                                "Price: " + maxPrice + currency);
 
-                    session.setState(UserState.IDLE);
-                    session.setProductName(null);
-
-                } catch (NumberFormatException e) {
-                    sendMessage(chatId, "Currency must be one of 'KZT', 'RUB', 'USD', 'EUR'");
-                }
+                session.setState(UserState.IDLE);
+                session.setProductName(null);
             }
 
 
