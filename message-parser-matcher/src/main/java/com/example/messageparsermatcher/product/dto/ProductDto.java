@@ -16,6 +16,7 @@ public class ProductDto {
     private String channel;
     private String product;
     private BigDecimal price;
+    private String currency;
     private String salesman;
     private LocalDateTime timestamp;
 }

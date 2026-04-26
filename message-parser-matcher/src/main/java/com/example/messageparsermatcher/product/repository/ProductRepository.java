@@ -11,8 +11,12 @@ import java.util.List;
 
 public interface ProductRepository extends MongoRepository<Product, String> {
 
-    @Query("{ 'product': { $regex: ?0, $options: 'i' }, 'price': { $lte: ?1 } }")
-    List<Product> findByProductRegexAndPriceLessThanEqual(String product, BigDecimal maxPrice);
+    @Query("{ "+
+            " 'product': { $regex: ?0, $options: 'i' }, "+
+            " 'price': { $lte: ?1 }, " +
+            " 'currency' : ?2" +
+            "}")
+    List<Product> findMatches(String product, BigDecimal maxPrice, String currency);
 
     List<Product> findByTimestampLessThanEqual(LocalDateTime timestampIsLessThan);
 }

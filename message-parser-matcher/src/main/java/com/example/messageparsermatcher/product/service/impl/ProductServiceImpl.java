@@ -34,6 +34,7 @@ public class ProductServiceImpl implements ProductService {
                 dto.getChannel(),
                 dto.getProduct(),
                 dto.getPrice(),
+                dto.getCurrency(),
                 dto.getSalesman(),
                 dto.getTimestamp()
         );
@@ -56,6 +57,7 @@ public class ProductServiceImpl implements ProductService {
                     dto.getChannel(),
                     parsedResult.getProduct(),
                     parsedResult.getPrice(),
+                    parsedResult.getCurrency(),
                     parsedResult.getSalesman(),
                     dto.getDate()
             );

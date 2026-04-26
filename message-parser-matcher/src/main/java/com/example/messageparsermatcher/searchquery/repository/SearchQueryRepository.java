@@ -10,8 +10,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface SearchQueryRepository extends MongoRepository<SearchQuery, String> {
-    @Query("{ 'product': { $regex: ?0, $options: 'i' }, 'maxPrice': { $gte: ?1 } }")
-    List<SearchQuery> findByProductRegexAndMaxPriceGreaterThanEqual(String product, BigDecimal price);
+    @Query("{ " +
+            "  'product': { $regex: ?0, $options: 'i' }, " +
+            "  'maxPrice': { $gte: ?1 }, " +
+            "  'currency': ?2 " +
+            "}")
+    List<SearchQuery> findMatches(String product, BigDecimal price, String currency);
 
     List<SearchQuery> findByCreatedAtLessThanEqual(LocalDateTime createdAtIsLessThan);
 }

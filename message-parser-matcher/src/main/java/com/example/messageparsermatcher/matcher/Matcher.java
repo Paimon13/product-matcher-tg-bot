@@ -24,9 +24,10 @@ public class Matcher {
 
     public MatchDto searchMatchWithQuery(SearchQueryDto dto) {
         List<Product> productList =
-                productRepository.findByProductRegexAndPriceLessThanEqual(
+                productRepository.findMatches(
                         dto.getProduct().trim(),
-                        dto.getMaxPrice()
+                        dto.getMaxPrice(),
+                        dto.getCurrency()
                 );
         Product bestProduct = productList
                 .stream()
@@ -46,14 +47,16 @@ public class Matcher {
                 bestProduct.getProduct(),
                 bestProduct.getSalesman(),
                 bestProduct.getPrice(),
+                bestProduct.getCurrency(),
                 bestProduct.getTimestamp()
         );
     }
     public List<MatchDto> searchMatchWithProduct(ProductDto dto) {
         List<SearchQuery> queryList =
-                searchQueryRepository.findByProductRegexAndMaxPriceGreaterThanEqual(
+                searchQueryRepository.findMatches(
                         dto.getProduct().trim(),
-                        dto.getPrice()
+                        dto.getPrice(),
+                        dto.getCurrency()
                 );
 
         return queryList.stream()
@@ -64,6 +67,7 @@ public class Matcher {
                         searchQuery.getProduct(),
                         dto.getSalesman(),
                         dto.getPrice(),
+                        dto.getCurrency(),
                         dto.getTimestamp()
                 ))
                 .toList();

@@ -30,6 +30,7 @@ public class SearchQueryServiceImpl implements SearchQueryService {
                 dto.getUserId(),
                 dto.getProduct(),
                 dto.getMaxPrice(),
+                dto.getCurrency(),
                 LocalDateTime.now()
         );
 

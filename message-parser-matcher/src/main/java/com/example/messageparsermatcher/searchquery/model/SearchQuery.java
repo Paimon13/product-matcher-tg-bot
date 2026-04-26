@@ -21,13 +21,15 @@ public class SearchQuery {
     private Long userId;
     private String product;
     private BigDecimal maxPrice;
+    private String currency;
     private LocalDateTime createdAt;
 
-    public SearchQuery(Long chatId, Long userId, String product, BigDecimal maxPrice, LocalDateTime createdAt){
+    public SearchQuery(Long chatId, Long userId, String product, BigDecimal maxPrice,String currency,  LocalDateTime createdAt){
         this.chatId = chatId;
         this.userId = userId;
         this.product = product;
         this.maxPrice = maxPrice;
+        this.currency = currency;
         this.createdAt = createdAt;
     }
 }

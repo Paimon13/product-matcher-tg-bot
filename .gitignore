@@ -32,3 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 .idea/
+product-matcher-tg-bot.iml

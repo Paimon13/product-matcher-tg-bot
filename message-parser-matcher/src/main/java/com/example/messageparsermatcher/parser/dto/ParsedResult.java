@@ -10,5 +10,6 @@ import java.math.BigDecimal;
 public class ParsedResult {
     private String product;
     private BigDecimal price;
+    private String currency;
     private String salesman;
 }

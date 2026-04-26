@@ -19,15 +19,17 @@ public class Product {
     private String channel;
     private String product;
     private BigDecimal price;
+    private String currency;
     private String salesman;
     private LocalDateTime timestamp;
 
-    public Product(Long channelId, Long messageId, String channel, String product, BigDecimal price, String salesman, LocalDateTime timestamp) {
+    public Product(Long channelId, Long messageId, String channel, String product, BigDecimal price,String currency,  String salesman, LocalDateTime timestamp) {
         this.channelId = channelId;
         this.messageId = messageId;
         this.channel = channel;
         this.product = product;
         this.price = price;
+        this.currency = currency;
         this.salesman = salesman;
         this.timestamp = timestamp;
     }

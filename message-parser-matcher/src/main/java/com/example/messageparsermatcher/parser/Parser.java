@@ -9,59 +9,40 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parser {
-
     private static final Pattern USER_PATTERN =
             Pattern.compile("@\\w+");
 
+    private static final String CURRENCY_SYMBOLS = "тенге|тг|₸|руб|р|₽|usd|\\$|eur|€";
+
     private static final Pattern LINE_PRODUCT_PRICE_PATTERN =
-            Pattern.compile("^(.+?)[\\s\\-–—]+(\\d[\\d\\s.,]*)(?:\\s*(тенге|тг|₸))?$",
+            Pattern.compile("^(.+?)[\\s\\-–—]+(\\d[\\d\\s.,]*)(?:\\s*(" + CURRENCY_SYMBOLS + "))?$",
                     Pattern.CASE_INSENSITIVE);
 
-    private static final Pattern PRICE_ONLY_PATTERN =
-            Pattern.compile("(\\d[\\d\\s.,]*\\d|\\d)\\s*(тенге|тг|₸)?",
-                    Pattern.CASE_INSENSITIVE);
 
     public static List<ParsedResult> parse(String text, String channelUsername) {
         List<ParsedResult> result = new ArrayList<>();
-
         String salesman = findSalesman(text);
-
-        if (salesman == null) {
-            salesman = channelUsername;
-        }
+        if (salesman == null) salesman = channelUsername;
 
         String[] lines = text.split("\\R");
-
         for (String line : lines) {
             line = line.trim();
-
-            if (line.isBlank()) {
-                continue;
-            }
+            if (line.isBlank()) continue;
 
             Matcher matcher = LINE_PRODUCT_PRICE_PATTERN.matcher(line);
-
             if (matcher.find()) {
                 String product = matcher.group(1).trim();
-                BigDecimal price = parsePrice(matcher.group(2));
+
+                String rawCurrency = matcher.group(2) != null ? matcher.group(2) : matcher.group(4);
+                String currency = detectCurrency(rawCurrency);
+
+                BigDecimal price = parsePrice(matcher.group(3));
 
                 if (price != null) {
-                    result.add(new ParsedResult(product, price, salesman));
+                    result.add(new ParsedResult(product, price, currency, salesman));
                 }
             }
         }
-
-        if (!result.isEmpty()) {
-            return result;
-        }
-
-        String product = lines.length > 0 ? lines[0].trim() : null;
-        BigDecimal price = findFirstPrice(text);
-
-        if (product != null && price != null) {
-            result.add(new ParsedResult(product, price, salesman));
-        }
-
         return result;
     }
 
@@ -75,28 +56,30 @@ public class Parser {
         return null;
     }
 
-    private static BigDecimal findFirstPrice(String text) {
-        Matcher matcher = PRICE_ONLY_PATTERN.matcher(text);
-
-        if (matcher.find()) {
-            return parsePrice(matcher.group(1));
-        }
-
-        return null;
-    }
-
     private static BigDecimal parsePrice(String raw) {
-        if (raw == null) {
-            return null;
-        }
+        if (raw == null) return null;
 
-        raw = raw
-                .replaceAll("[\\s.,]", "");
+        raw = raw.trim().replace(" ", "").replace(",", ".");
+
+        if (raw.indexOf('.') != raw.lastIndexOf('.')) {
+            raw = raw.replace(".", "");
+        }
 
         try {
             return new BigDecimal(raw);
         } catch (NumberFormatException e) {
             return null;
         }
+    }
+    private static String detectCurrency(String raw) {
+        if (raw == null) return "KZT";
+        String val = raw.toLowerCase().trim();
+
+        if (val.matches("тенге|тг|₸")) return "KZT";
+        if (val.matches("руб|р|₽")) return "RUB";
+        if (val.matches("usd|\\$")) return "USD";
+        if (val.matches("eur|€")) return "EUR";
+
+        return "KZT";
     }
 }
