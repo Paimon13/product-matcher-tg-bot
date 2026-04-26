@@ -76,21 +76,33 @@ public class ProductBot extends TelegramLongPollingBot {
 
             case WAITING_PRODUCT_PRICE -> {
                 try {
-                    BigDecimal price = new BigDecimal(text);
+                    session.setMaxPrice(BigDecimal.valueOf(Double.parseDouble(text)));
 
+                    session.setState(UserState.WAITING_PRODUCT_PRICE);
+                    sendMessage(chatId, "Теперь введите свою валюту (KZT, RUB, USD, EUR)");
+
+                } catch (NumberFormatException e) {
+                    sendMessage(chatId, "Цена должна быть числом. Например: 1500");
+                }
+            }
+            case WAITING_PRODUCT_CURRENCY -> {
+                try {
+                    String currency = text;
                     String productName = session.getProductName();
+                    BigDecimal maxPrice = session.getMaxPrice();
 
                     SearchQueryDto  searchQueryDto = new SearchQueryDto(
                             chatId,
                             userId,
                             productName,
-                            price
+                            maxPrice,
+                            currency
                     );
                     producer.send(searchQueryDto);
                     sendMessage(chatId,
                             "Кукла сохранена\n" +
                                     "Название: " + productName + "\n" +
-                                    "Цена: " + price);
+                                    "Цена: " + maxPrice + currency);
 
                     session.setState(UserState.IDLE);
                     session.setProductName(null);
@@ -99,6 +111,7 @@ public class ProductBot extends TelegramLongPollingBot {
                     sendMessage(chatId, "Цена должна быть числом. Например: 1500");
                 }
             }
+
 
             default -> sendMessage(chatId, "Напиши /add чтобы добавить куклу");
         }

@@ -14,4 +14,5 @@ public class SearchQueryDto {
     private Long userId;
     private String product;
     private BigDecimal maxPrice;
+    private String currency;
 }

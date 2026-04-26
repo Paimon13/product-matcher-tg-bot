@@ -5,10 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserSession {
     private UserState state = UserState.IDLE;
     private String productName;
+    private BigDecimal maxPrice;
 }

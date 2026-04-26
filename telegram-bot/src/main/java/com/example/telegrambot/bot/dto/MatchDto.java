@@ -17,5 +17,6 @@ public class MatchDto {
     private String product;
     private String salesman;
     private BigDecimal price;
+    private String currency;
     private LocalDateTime timestamp;
 }
