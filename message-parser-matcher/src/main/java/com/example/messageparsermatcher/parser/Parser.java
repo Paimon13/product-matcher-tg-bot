@@ -21,24 +21,45 @@ public class Parser {
 
     public static List<ParsedResult> parse(String text, String channelUsername) {
         List<ParsedResult> result = new ArrayList<>();
+
         String salesman = findSalesman(text);
-        if (salesman == null) salesman = channelUsername;
+        if (salesman == null || salesman.isBlank()) {
+            salesman = channelUsername;
+        }
 
         String[] lines = text.split("\\R");
+
+        String currentProduct = null;
+
+        Pattern pricePattern = Pattern.compile(
+                "^(\\d[\\d\\s.,]*)(?:\\s*(" + CURRENCY_SYMBOLS + "))?$",
+                Pattern.CASE_INSENSITIVE
+        );
+
         for (String line : lines) {
             line = line.trim();
             if (line.isBlank()) continue;
 
-            Matcher matcher = LINE_PRODUCT_PRICE_PATTERN.matcher(line);
-            if (matcher.find()) {
-                String product = matcher.group(1).trim();
-                BigDecimal price = parsePrice(matcher.group(2));
-                String currency = detectCurrency(matcher.group(3));
+            if (USER_PATTERN.matcher(line).find()) {
+                continue;
+            }
+
+            Matcher priceMatcher = pricePattern.matcher(line);
+
+            if (priceMatcher.find() && currentProduct != null) {
+                BigDecimal price = parsePrice(priceMatcher.group(1));
+                String currency = detectCurrency(priceMatcher.group(2));
+
                 if (price != null) {
-                    result.add(new ParsedResult(product, price, currency, salesman));
+                    result.add(new ParsedResult(currentProduct, price, currency, salesman));
                 }
+
+                currentProduct = null;
+            } else {
+                currentProduct = line;
             }
         }
+
         return result;
     }
 

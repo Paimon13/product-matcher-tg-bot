@@ -28,18 +28,24 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void saveProduct(ProductDto dto) {
-        Product product = new Product(
-                dto.getChatId(),
-                dto.getMessageId(),
-                dto.getChannel(),
-                dto.getProduct(),
-                dto.getPrice(),
-                dto.getCurrency(),
-                dto.getSalesman(),
-                dto.getTimestamp()
-        );
+        try {
+            Product product = new Product(
+                    dto.getChatId(),
+                    dto.getMessageId(),
+                    dto.getChannel(),
+                    dto.getProduct(),
+                    dto.getPrice(),
+                    dto.getCurrency(),
+                    dto.getSalesman(),
+                    dto.getTimestamp()
+            );
 
-        productRepository.save(product);
+            Product saved = productRepository.save(product);
+            System.out.println("✅ Saved to Mongo! ID: " + saved.getId());
+        }catch (Exception e) {
+            System.err.println("❌ SAVE ERROR: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @Override
