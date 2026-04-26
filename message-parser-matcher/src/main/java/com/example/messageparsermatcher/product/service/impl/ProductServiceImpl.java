@@ -6,7 +6,7 @@ import com.example.messageparsermatcher.matcher.dto.MatchDto;
 import com.example.messageparsermatcher.parser.Parser;
 import com.example.messageparsermatcher.parser.dto.ParsedResult;
 import com.example.messageparsermatcher.product.dto.ProductDto;
-import com.example.messageparsermatcher.product.dto.TgMessageDto;
+import com.example.messageparsermatcher.kafka.dto.TgMessageDto;
 import com.example.messageparsermatcher.product.model.Product;
 import com.example.messageparsermatcher.product.repository.ProductRepository;
 import com.example.messageparsermatcher.product.service.ProductService;

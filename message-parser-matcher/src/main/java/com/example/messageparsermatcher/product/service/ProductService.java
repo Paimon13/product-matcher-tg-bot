@@ -1,7 +1,7 @@
 package com.example.messageparsermatcher.product.service;
 
 import com.example.messageparsermatcher.product.dto.ProductDto;
-import com.example.messageparsermatcher.product.dto.TgMessageDto;
+import com.example.messageparsermatcher.kafka.dto.TgMessageDto;
 import org.springframework.stereotype.Service;
 
 @Service

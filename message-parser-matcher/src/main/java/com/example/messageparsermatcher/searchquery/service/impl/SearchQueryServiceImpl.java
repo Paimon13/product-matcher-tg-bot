@@ -3,6 +3,7 @@ package com.example.messageparsermatcher.searchquery.service.impl;
 import com.example.messageparsermatcher.kafka.KafkaProducer;
 import com.example.messageparsermatcher.matcher.Matcher;
 import com.example.messageparsermatcher.matcher.dto.MatchDto;
+import com.example.messageparsermatcher.parser.Parser;
 import com.example.messageparsermatcher.searchquery.dto.SearchQueryDto;
 import com.example.messageparsermatcher.searchquery.model.SearchQuery;
 import com.example.messageparsermatcher.searchquery.repository.SearchQueryRepository;
@@ -25,20 +26,26 @@ public class SearchQueryServiceImpl implements SearchQueryService {
 
     @Override
     public void saveSearchQuery(SearchQueryDto dto){
-        SearchQuery searchQuery = new SearchQuery(
-                dto.getChatId(),
-                dto.getUserId(),
-                dto.getProduct(),
-                dto.getMaxPrice(),
-                dto.getCurrency(),
-                LocalDateTime.now()
-        );
-
-        searchQueryRepository.save(searchQuery);
+        try {
+            SearchQuery searchQuery = new SearchQuery(
+                    dto.getChatId(),
+                    dto.getUserId(),
+                    dto.getProduct(),
+                    dto.getMaxPrice(),
+                    dto.getCurrency(),
+                    LocalDateTime.now()
+            );
+            SearchQuery saved = searchQueryRepository.save(searchQuery);
+            System.out.println("✅ Saved to Mongo! ID: " + saved.getId());
+        } catch (Exception e) {
+            System.err.println("❌ SAVE ERROR: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     @Override
     public void searchMatchOrSave(SearchQueryDto dto){
-        saveSearchQuery(dto);
+       dto.setCurrency(Parser.detectCurrency(dto.getCurrency()));
+       saveSearchQuery(dto);
 
        MatchDto match =  matcher.searchMatchWithQuery(dto);
 

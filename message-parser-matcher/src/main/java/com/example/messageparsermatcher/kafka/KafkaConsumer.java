@@ -1,6 +1,6 @@
 package com.example.messageparsermatcher.kafka;
 
-import com.example.messageparsermatcher.product.dto.TgMessageDto;
+import com.example.messageparsermatcher.kafka.dto.TgMessageDto;
 import com.example.messageparsermatcher.product.service.ProductService;
 import com.example.messageparsermatcher.searchquery.dto.SearchQueryDto;
 import com.example.messageparsermatcher.searchquery.service.SearchQueryService;

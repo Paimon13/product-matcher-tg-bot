@@ -1,4 +1,4 @@
-package com.example.messageparsermatcher.product.dto;
+package com.example.messageparsermatcher.kafka.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

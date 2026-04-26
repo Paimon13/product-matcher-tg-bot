@@ -32,12 +32,8 @@ public class Parser {
             Matcher matcher = LINE_PRODUCT_PRICE_PATTERN.matcher(line);
             if (matcher.find()) {
                 String product = matcher.group(1).trim();
-
-                String rawCurrency = matcher.group(2) != null ? matcher.group(2) : matcher.group(4);
-                String currency = detectCurrency(rawCurrency);
-
-                BigDecimal price = parsePrice(matcher.group(3));
-
+                BigDecimal price = parsePrice(matcher.group(2));
+                String currency = detectCurrency(matcher.group(3));
                 if (price != null) {
                     result.add(new ParsedResult(product, price, currency, salesman));
                 }
@@ -71,7 +67,7 @@ public class Parser {
             return null;
         }
     }
-    private static String detectCurrency(String raw) {
+    public static String detectCurrency(String raw) {
         if (raw == null) return "KZT";
         String val = raw.toLowerCase().trim();
 
