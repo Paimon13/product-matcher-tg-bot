@@ -1,6 +1,6 @@
 # product-matcher-tg-bot
 
-![Java](https://img.shields.io/badge/Java-17-orange?logo=java)
+![Java](https://img.shields.io/badge/Java-21-orange?logo=java)
 ![Spring Boot](https://img.shields.io/badge/Spring--Boot-3.0-brightgreen?logo=springboot)
 ![Docker](https://img.shields.io/badge/Docker-ready-blue?logo=docker)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
